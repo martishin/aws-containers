@@ -1,0 +1,28 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "webserver",
+            "image": "nginx:latest",
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/etc/nginx-app",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "protocol": "tcp"
+                }
+            ],
+            "memory": 128
+        }
+    ],
+    "executionRoleArn": "arn:aws:iam::100381574725:role/ecsTaskExecutionRole",
+    "family": "webapp-task",
+    "requiresCompatibilities": [
+        "EC2"
+    ]
+}

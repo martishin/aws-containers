@@ -1,0 +1,16 @@
+{
+    "cluster": "demo-cluster",
+    "serviceName": "webapp-service",
+    "taskDefinition": "webapp-task:1",
+    "schedulingStrategy": "REPLICA",
+    "desiredCount": 2,
+    "launchType": "EC2",
+    "loadBalancers": [
+        {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:100381574725:targetgroup/webapp-service-tg/30251330a9a79708",
+            "containerName": "webserver",
+            "containerPort": 80
+        }
+    ],
+    "healthCheckGracePeriodSeconds": 30
+}
