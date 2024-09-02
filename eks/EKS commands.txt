@@ -1,0 +1,33 @@
+aws iam create-policy \
+--policy-name eks-directory-service \
+--policy-document "{
+\"Version\": \"2012-10-17\",
+\"Statement\": [ { \"Effect\": \"Allow\", \"Action\": [ \"dynamodb:GetItem\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:DeleteItem\", \"dynamodb:UpdateItem\", \"dynamodb:PutItem\" ],
+\"Resource\": [ \"arn:aws:dynamodb:${REGION}:${ACCOUNT_ID}:table/Employees\"] } ]
+}"
+
+eksctl create cluster -f eks/corp-eks-cluster.yaml
+
+kubectl get all --all-namespaces
+
+kubectl get pods --all-namespaces -o jsonpath="{.items[*].spec.containers[*].image}" | tr -s '[[:space:]]' '\n' | sort
+
+kubectl apply -f directory-service/service/kubernetes/deployment.yaml
+
+kubectl apply -f directory-service/service/kubernetes/service.yaml
+
+kubectl apply -f directory-service/frontend/kubernetes/deployment.yaml
+
+kubectl apply -f directory-service/frontend/kubernetes/service.yaml
+
+kubectl get service directory-frontend
+
+kubectl get all
+
+# cleanup
+kubectl delete -f directory-service/service/kubernetes/deployment.yaml
+kubectl delete -f directory-service/service/kubernetes/service.yaml
+kubectl delete -f directory-service/frontend/kubernetes/deployment.yaml
+kubectl delete -f directory-service/frontend/kubernetes/service.yaml
+
+eksctl delete cluster -f corp-eks-cluster.yaml
